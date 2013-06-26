@@ -3,7 +3,8 @@ class Piece
   DIRECTIONS = [[1, 1], [1, -1], [-1, -1], [-1, 1],
                 [0, 1], [1, 0], [0, -1], [-1, 0]]
 
-  attr_reader :color, :symbol, :position
+  attr_accessor :position
+  attr_reader :color, :symbol
 
   def initialize(color, symbol, position)
     @color = color
@@ -37,13 +38,15 @@ class Piece
     new_pos = [y + dir_y, x + dir_x]
 
     positions << new_pos if on_board?(new_pos)
-    if !board[new_pos[0]][new_pos[1]].nil? || !on_board?(new_pos)
+    if !on_board?(new_pos) || !board[new_pos[0]][new_pos[1]].nil?
       return positions
     else
-      diagonal_moves(new_pos, direction, board, positions)
+      moves_in_direction(new_pos, direction, board, positions)
     end
   end
 end
+
+# Specific Piece subclasses
 
 class King < Piece
   def possible_moves(board)
@@ -119,17 +122,17 @@ class Pawn < Piece
 
     moves.reject! {|pos| !on_board?(pos)}
 
-    moves << first_move(@position) if is_first?
+    moves << first_move if is_first? && board[first_move[0]][first_move[1]].nil?
     moves - invalid_moves(moves, board)
   end
 
   private
 
   def first_move
-    if @position[0] == 2
-      return [@position[0] + 2, @position[1]] # moves black pawn
+    if @position[0] == 1
+      [@position[0] + 2, @position[1]] # moves black pawn
     else
-      return [@position[0] - 2, @position[1]] # moves white pawn
+      [@position[0] - 2, @position[1]] # moves white pawn
     end
   end
 
