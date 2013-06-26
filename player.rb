@@ -15,7 +15,7 @@ class Player
   end
 
   def process_move(input)
-    return input if input == "undo"
+    return input.first if input.include?("undo")
     moves = []
 
     input.each {|e| moves << e.split('')}

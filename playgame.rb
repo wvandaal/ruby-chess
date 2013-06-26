@@ -27,15 +27,17 @@ class ChessGame
         if move == "undo"
           @board.undo_move
         else
-        piece = get_piece(move[0])
-        if piece.color != @turn
-          raise ArgumentError.new "That is not your piece."
-        end
-        @board.make_move(move)
+          piece = get_piece(move[0])
 
-        if @board.check?(piece.color)
-          raise ArgumentError.new "You are still in check"
-          undo_move
+          if piece.color != @turn
+            raise ArgumentError.new "That is not your piece."
+          end
+          @board.make_move(move)
+
+          if @board.check?(piece.color)
+            raise ArgumentError.new "You are still in check"
+            undo_move
+          end
         end
       rescue ArgumentError => e
         puts "Error: #{e}"
